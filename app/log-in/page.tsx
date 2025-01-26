@@ -1,14 +1,36 @@
 "use client";
 
+import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      setIsLoading(true);
+      const response = await axios.post("http://localhost:3000/api/log-in", {
+        email,
+        password,
+      });
+
+      setIsLoading(false);
+      toast.success(response.data.message);
+      router.push("/");
+    } catch (error: any) {
+      setIsLoading(false);
+      console.log("Error in log in: ", error.message);
+      toast.error(error.response.data.message);
+    }
+  };
 
   return (
     <div className="flex justify-center items-center min-h-[100vh] py-10  px-4 md:px-6 max-w-[1500px] mx-auto">
@@ -20,7 +42,7 @@ const LoginPage = () => {
           Welcome back! Please log in to continue
         </p>
 
-        <form className="mt-6">
+        <form onSubmit={handleLogin} className="mt-6">
           <div className="flex flex-col text-sm mt-6">
             <label className="font-[500] mb-1">Email address</label>
             <input
@@ -43,14 +65,11 @@ const LoginPage = () => {
             />
           </div>
 
-          {/* {error && (
-              <p className="text-red-500 font-semibold mt-2">{error}</p>
-            )} */}
-
           <div className="flex justify-center mt-8 w-full">
             <div className="w-full">
               <button
                 type="submit"
+                disabled={isLoading}
                 className="flex items-center justify-center bg-[#0077b6] rounded-lg px-2 py-2 text-sm font-medium text-gray-50 hover:bg-[#023e8a] w-full md:w-96"
               >
                 Log in

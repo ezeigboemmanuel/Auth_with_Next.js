@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       );
     }
 
-    setCookie(user._id);
+    await setCookie(user._id);
 
     return Response.json(
       {

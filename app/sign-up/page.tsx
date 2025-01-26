@@ -13,7 +13,7 @@ const SignUpPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
@@ -33,7 +33,7 @@ const SignUpPage = () => {
     } catch (error: any) {
       setIsLoading(false);
       console.log("Error in sign up: ", error.message);
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -47,7 +47,7 @@ const SignUpPage = () => {
           Register now to access all features of AppX
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-6">
+        <form onSubmit={handleSignup} className="mt-6">
           <div className="flex flex-col text-sm">
             <label className="font-[500] mb-1">Username</label>
             <input
