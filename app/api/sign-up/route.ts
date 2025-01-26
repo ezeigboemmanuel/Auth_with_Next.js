@@ -26,14 +26,11 @@ export async function POST(request: Request) {
     const hashedPassword = await bcryptjs.hash(password, 10);
 
 
-    const user = new User({
+    const user = await User.create({
       username,
       email,
       password: hashedPassword,
     });
-
-    await user.save();
-
 
     await setCookie(user._id);
 
