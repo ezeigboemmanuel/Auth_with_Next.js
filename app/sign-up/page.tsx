@@ -1,14 +1,41 @@
 "use client";
 
+import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import toast from "react-hot-toast";
 
 const SignUpPage = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      setIsLoading(true);
+      const response = await axios.post(
+        "http://localhost:3000/api/sign-up",
+        {
+          username,
+          email,
+          password,
+        },
+      );
+
+      setIsLoading(false);
+      toast.success(response.data.message);
+      router.push("/");
+    } catch (error: any) {
+      setIsLoading(false);
+      console.log("Error in sign up: ", error.message);
+      toast.error(error.message);
+    }
+  };
 
   return (
     <div className="flex justify-center items-center min-h-[100vh] py-10  px-4 md:px-6 max-w-[1500px] mx-auto">
@@ -20,7 +47,7 @@ const SignUpPage = () => {
           Register now to access all features of AppX
         </p>
 
-        <form className="mt-6">
+        <form onSubmit={handleSubmit} className="mt-6">
           <div className="flex flex-col text-sm">
             <label className="font-[500] mb-1">Username</label>
             <input
@@ -54,15 +81,12 @@ const SignUpPage = () => {
             />
           </div>
 
-          {/* {error && (
-              <p className="text-red-500 font-semibold mt-2">{error}</p>
-            )} */}
-
           <div className="flex justify-center mt-8 w-full">
             <div className="w-full">
               <button
                 type="submit"
                 className="flex items-center justify-center bg-[#0077b6] rounded-lg px-2 py-2 text-sm font-medium text-gray-50 hover:bg-[#023e8a] w-full md:w-96"
+                disabled={isLoading}
               >
                 Sign Up
               </button>

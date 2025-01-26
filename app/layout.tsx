@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import "./globals.css";
+import ToastProvider from "@/providers/ToastProvider";
 
 const open_sans = Open_Sans({
   subsets: ["latin"],
@@ -19,9 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${open_sans.className} antialiased`}
-      >
+      <body className={`${open_sans.className} antialiased`}>
+        <ToastProvider />
         {children}
       </body>
     </html>

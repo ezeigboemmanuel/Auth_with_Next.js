@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     await user.save();
 
 
-    setCookie(user._id);
+    await setCookie(user._id);
 
     return Response.json(
       {
